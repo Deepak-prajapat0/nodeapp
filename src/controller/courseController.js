@@ -3,8 +3,8 @@ const courseSchema = require('../models/model')
 const createCourse = async(req,res)=>{
     try {
         let {name,course,tags,price,isPublished} = req.body;
-        let courseSc = await courseSchema.create(req.body)
-        return res.status(201).send({status:true,msg:"Course created sucessfully",data:req.body});
+        let newCourse = await courseSchema.create(req.body)
+        return res.status(201).send({status:true,msg:"Course created sucessfully",newCourse});
 
     } catch (error) {
         return res.status(500).send({error:error.message});
