@@ -1,8 +1,18 @@
-const courseSchema = require('../models/model')
+const courseSchema = require('../models/courseModel')
+const {courseValidation} = require('../validation/joiValidation')
+const authorSchema = require("../models/authorModel")
 
 const createCourse = async(req,res)=>{
     try {
-        let {name,course,tags,price,isPublished} = req.body;
+        let {name,author,tags,price,isPublished} = req.body;
+        let authorExist=  await authorSchema.findById(author);
+        if(!authorExist){
+            return res.status(400).send({status:false,msg:"No author found with this id"})
+        }
+        let result = courseValidation.validate(req.body)
+        if(result.error){
+            return res.status(400).send({error:result.error.details[0].message})
+        }
         let newCourse = await courseSchema.create(req.body)
         return res.status(201).send({status:true,msg:"Course created sucessfully",newCourse});
 
@@ -19,9 +29,13 @@ const findCourse =async(req,res)=>{
         // let courses = await courseSchema.find({price:{$eq:800}})
         // let courses = await courseSchema.findById(id)
         // let courses = await courseSchema.findOne({name:"Mosh"})
-        let courses = await courseSchema.findOne({name:"Mosh"})
+        let id = req.params.id;
+        let course = await courseSchema.findById(id).populate("author")
+        if(!course){
+            return res.status(404).send({status:false,msg:"no course found with this course Id"})
+        }
         
-        return res.status(200).send({status:true,courses})
+        return res.status(200).send({status:true,course})
         
     } catch (error) {
         return res.status(500).send({error:error.message});
