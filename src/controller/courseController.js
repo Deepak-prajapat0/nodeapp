@@ -30,7 +30,7 @@ const findCourse =async(req,res)=>{
         // let courses = await courseSchema.findById(id)
         // let courses = await courseSchema.findOne({name:"Mosh"})
         let id = req.params.id;
-        let course = await courseSchema.findById(id).populate("author")
+        let course = await courseSchema.findById(id).populate("author","-__v").select({__v:0})
         if(!course){
             return res.status(404).send({status:false,msg:"no course found with this course Id"})
         }

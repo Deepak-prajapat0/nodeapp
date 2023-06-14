@@ -11,6 +11,7 @@ router.delete("/api/course", courseController.deleteCourse);
 
 
 router.post("/api/author", authorController.createAuthor); 
+router.post("/api/author-login", authorController.loginAuthor); 
 
 
 
