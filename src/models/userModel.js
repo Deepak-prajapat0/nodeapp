@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const authorSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     trim: true,
@@ -21,15 +21,12 @@ const authorSchema = new mongoose.Schema({
     trim: true,
     required: true,
     minLength: 6,
-    maxLength: 50,
   },
-  specialization: {
-    type: String,
-    trim: true,
-    required: true,
-    minLength: 3,
-    maxLength: 50,
-  },
+  isAuthor:{
+    type:Boolean,
+    trim:true,
+    required:true
+  }
 });
 
-module.exports = mongoose.model("Author", authorSchema);
+module.exports = mongoose.model("User", userSchema);
