@@ -11,8 +11,8 @@ router.post("/api/login", authorController.loginUser);
 router.post("/api/course",auth.auth, courseController.createCourse); 
 router.get("/api/course", courseController.findCourse); 
 router.get("/api/course/:id", courseController.findCourse); 
-router.put("/api/course", courseController.updateCourse); 
-router.delete("/api/course", courseController.deleteCourse); 
+router.put("/api/course",auth.auth, courseController.updateCourse); 
+router.delete("/api/course",auth.auth, courseController.deleteCourse); 
 
 
 

@@ -48,10 +48,21 @@ const findCourse =async(req,res)=>{
 
 const updateCourse = async(req,res)=>{
     try {
-        let id = req.query.id;
-        let data = req.body
-
-        let updatedCourse = await courseModel.findOneAndUpdate({_id:id},data,{new:true});
+        let {courseId,name,tags,price,isPublished} = req.body
+        let userId = req.id;
+        let user=  await userModel.findById(userId);
+        if(!user){
+            return res.status(400).send({status:false,msg:"No user found with this id"})
+        }
+        if(user.isAuthor === false){
+            return res.status(403).send({status:false,msg:"You are not allowed to update course"})
+        }
+        let course = await courseModel.findById(courseId);
+        console.log(course)
+        if(course.author != userId){
+            return res.status(403).send({status:false,msg:"You are not allowed to update course"})
+        }
+        let updatedCourse = await courseModel.findOneAndUpdate({_id:courseId},{name,tags,price,isPublished},{new:true});
         return res.status(200).send({status:true,updatedCourse});
         
     } catch (error) {
@@ -60,8 +71,20 @@ const updateCourse = async(req,res)=>{
 }
 const deleteCourse = async(req,res)=>{
     try {
-        let id = req.query.id;
-        let deletedCourse = await courseModel.findOneAndDelete({_id:id});
+        let userId = req.id;
+        let courseId = req.body.courseId;
+        let user=  await userModel.findById(userId);
+        if(!user){
+            return res.status(400).send({status:false,msg:"No user found with this id"})
+        }
+        if(user.isAuthor === false){
+            return res.status(403).send({status:false,msg:"You are not allowed to do such operations"})
+        }
+        let course = await courseModel.findById(courseId);
+        if(course.author != userId){
+            return res.status(403).send({status:false,msg:"You are not allowed to delete course"})
+        }
+        let deletedCourse = await courseModel.findOneAndDelete({_id:courseId});
         return res.send({status:true,deletedCourse});
         
     } catch (error) {
